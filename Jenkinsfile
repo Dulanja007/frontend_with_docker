@@ -11,7 +11,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {  
-                bat 'docker build -t dulanja007/frontend-final:%BUILD_NUMBER% .'
+                bat 'docker build -t dulanja007/frontend-cicd_test:%BUILD_NUMBER% .'
             }
         }
         stage('Login to Docker Hub') {
@@ -25,7 +25,7 @@ pipeline {
         }
         stage('Push Image') {
             steps {
-                bat 'docker push dulanja007/frontend-final:%BUILD_NUMBER%'
+                bat 'docker push dulanja007/frontend-cicd_test:%BUILD_NUMBER%'
             }
         }
     }
