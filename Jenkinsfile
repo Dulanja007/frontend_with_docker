@@ -1,40 +1,40 @@
-// pipeline {
-//     agent any 
+pipeline {
+    agent any 
     
-//     stages { 
-//         stage('SCM Checkout') {
-//             steps {
-//                 retry(3) {
-//                     git branch: 'main', url: 'https://github.com/Dulanja007/frontend_with_docker'
-//                 }
-//             }
-//         }
-//         stage('Build Docker Image') {
-//             steps {  
-//                 bat 'docker build -t dulanja007/frontend-cicd_test:%BUILD_NUMBER% .'
-//             }
-//         }
-//         stage('Login to Docker Hub') {
-//             steps {
-//                 withCredentials([string(credentialsId: 'cicddocker-password', variable: 'cicddocker-password')]) {
-//                     script {
-//                         bat 'docker login -u dulanja007 -p ${cicddocker-password}'
-//                     }
-//                 }
-//             }
-//         }
-//         stage('Push Image') {
-//             steps {
-//                 bat 'docker push dulanja007/frontend-cicd_test:%BUILD_NUMBER%'
-//             }
-//         }
-//     }
-//     post {
-//         always {
-//             bat 'docker logout'
-//         }
-//     }
-// }
+    stages { 
+        stage('SCM Checkout') {
+            steps {
+                retry(3) {
+                    git branch: 'main', url: 'https://github.com/Dulanja007/frontend_with_docker.git'
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {  
+                bat 'docker build -t dulanja007/frontend-cicd_test:%BUILD_NUMBER% .'
+            }
+        }
+        stage('Login to Docker Hub') {
+            steps {
+                withCredentials([string(credentialsId: 'cicddocker-password', variable: 'cicddocker-password')]) {
+                    script {
+                        bat 'docker login -u dulanja007 -p ${cicddocker-password}'
+                    }
+                }
+            }
+        }
+        stage('Push Image') {
+            steps {
+                bat 'docker push dulanja007/frontend-cicd_test:%BUILD_NUMBER%'
+            }
+        }
+    }
+    post {
+        always {
+            bat 'docker logout'
+        }
+    }
+}
 
 // pipeline {
 //     agent {
@@ -50,7 +50,7 @@
 //         stage('Checkout') {
 //             steps {
 //                 echo 'Cloning repository...'
-//                 git branch: 'main', url: 'https://github.com/Dulanja007/frontend_with_docker/tree/main' // Update with your repo URL
+//                 git branch: 'main', url: 'https://github.com/Dulanja007/frontend_with_docker.git' // Update with your repo URL
 //             }
 //         }
 //         stage('Install Dependencies') {
@@ -104,70 +104,5 @@
 //     }
 // }
 
-pipeline {
-    agent any
 
-    environment {
-        // Define environment variables if needed
-        NODE_VERSION = '16' // Replace with your Node.js version
-    }
-
-    stages {
-        stage('Checkout Code') {
-            steps {
-                // Clone your repository
-                git branch: 'main', url: 'https://github.com/Dulanja007/frontend_with_docker.git'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                // Install Node.js version using nvm
-                sh 'nvm install $NODE_VERSION'
-                sh 'nvm use $NODE_VERSION'
-
-                // Install dependencies
-                sh 'npm install'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                // Run tests using npm
-                sh 'npm test'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                // Build the React app
-                sh 'npm run build'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                // Deploy the build to your server (update commands as needed)
-                sh '''
-                tar -czf build.tar.gz build
-                scp build.tar.gz user@your-server:/path/to/deploy
-                ssh user@your-server "cd /path/to/deploy && tar -xzf build.tar.gz && mv build /var/www/html/your-react-app"
-                '''
-            }
-        }
-    }
-
-    post {
-        always {
-            // Cleanup or send notifications
-            echo 'Pipeline completed'
-        }
-        success {
-            echo 'Build and deployment succeeded!'
-        }
-        failure {
-            echo 'Build or deployment failed.'
-        }
-    }
-}
 
