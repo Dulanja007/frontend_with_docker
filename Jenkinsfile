@@ -50,7 +50,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Cloning repository...'
-                git branch: 'main', url: 'https://github.com/Dulanja007/frontend_with_docker' // Update with your repo URL
+                git branch: 'main', url: 'https://github.com/Dulanja007/frontend_with_docker/tree/main' // Update with your repo URL
             }
         }
         stage('Install Dependencies') {
